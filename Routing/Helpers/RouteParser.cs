@@ -32,7 +32,23 @@ namespace Routing.Helpers
 
             return arguments;
         }
-    }
+
+		/// <summary>
+		/// Находит статическую часть из маршрута
+		/// </summary>
+		/// <param name="route"></param>
+		/// <returns></returns>
+		public static string GetStaticPartFromRouteTemplate(string route)
+		{
+			var dynamicSymbolIndex = route.IndexOf('{');
+			if (dynamicSymbolIndex < 1)
+			{
+				throw new ArgumentException($"{route} has bad template");
+			}
+
+			return route.Remove(dynamicSymbolIndex);
+		}
+	}
 
 
 }
