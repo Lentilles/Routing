@@ -1,53 +1,62 @@
-﻿using Routing.Interfaces;
+﻿using Routing.Helpers;
+using Routing.Interfaces;
+using Routing.Model;
+using System.Text;
 
 namespace Routing
 {
     public class Router : IRouter
     {
-        private Dictionary<string, RouteData> routingTable = new Dictionary<string, RouteData>();
+        private static Router _router;
 
-        public void RegisterRoute(string template, Action action)
+        public Router router 
         {
-            var routeData = new RouteData(template, action);
-            routingTable.Add(template, routeData);
+            get 
+            { 
+                return _router ??= new Router();
+            }
         }
 
-        public void RegisterRoute<T1>(string template, Action<T1> action)
-        {
-            var routeData = new RouteData(template, action);
-            routingTable.Add(template, routeData);
-        }
+        private Dictionary<string, Route> routingTable = new Dictionary<string, Route>();
 
-        public void RegisterRoute<T1, T2>(string template, Action<T1, T2> action)
+        public void RegisterRoute(string template, Delegate action)
         {
-            var routeData = new RouteData(template, action);
+            var routeData = new Route(template, action);
             routingTable.Add(template, routeData);
         }
 
         public void Route(string route)
         {
-            if (routingTable.TryGetValue(route, out var result))
+            /*  TODO Переделать получение маршрута, таким образом,
+            *   что мы находим сначала все объекты с подходящим статическим
+            *   маршрутом, потом выясняем, какие типы были переданы,
+            *   проверяем есть ли маршрут с такой сигнатурой или нет
+            */
+            if (routingTable.TryGetValue(route, out var routeObject))
             {
-                result.Method.DynamicInvoke();
-            }
-        }
+                if(routeObject.ArgumentsInRoute.Count() == 0)
+                {
+                    routeObject.Method.DynamicInvoke();
+                    return;
+                }
+
+                bool argumentNamesMatch = true;
+                foreach (var argument in routeObject.ArgumentsInRoute)
+                {
+                    // Сопоставляем имена аргументов с именами параметров переданных в Delegate
+                    if (!routeObject.ArgumentsInDelegate.ContainsKey(argument.Key))
+                    {
+                        argumentNamesMatch = false;
+                        break;
+                    }
+                }
 
 
-
-        private class RouteData
-        {
-            public readonly Delegate Method;
-            /// <summary>
-            ///     ArgName - Type
-            /// </summary>
-            public readonly Dictionary<string, string> Arguments;
-            public readonly string StaticPath;
-
-
-
-            public RouteData(string path, Delegate method)
-            {
-                Method = method;
+                // Получить аргументы из запроса и отправить их как параметры
+                if (!argumentNamesMatch)
+                {
+                    routeObject.Method.DynamicInvoke();
+                }
             }
         }
     }
