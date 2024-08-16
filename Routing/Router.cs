@@ -1,6 +1,6 @@
-﻿using Routing.Routing.Interfaces;
+﻿using Routing.Interfaces;
 
-namespace Routing.Routing
+namespace Routing
 {
     public class Router : IRouter
     {

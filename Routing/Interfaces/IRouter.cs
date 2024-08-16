@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Routing.Routing.Interfaces
+namespace Routing.Interfaces
 {
     public interface IRouter
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace STCTesting.Routing.Helpers
+namespace Routing.Helpers
 {
     public class RouteParser
     {
@@ -36,4 +36,3 @@ namespace STCTesting.Routing.Helpers
 
 
 }
-    
