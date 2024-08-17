@@ -21,7 +21,19 @@ namespace Routing.Helpers
 			{typeof(string).Name, "string"}
 		};
 
-
+		/// <summary>
+		/// Может получить тип из строкового значения
+		/// Принимаемые шаблоны значений в строке те же, что и в TryParse этого типа.
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns>Один из типов: 
+		/// <see cref="int"/>, 
+		/// <see cref="float"/>,
+		/// <see cref="double"/>,
+		/// <see cref="DateTime"/>,
+		/// <see cref="Guid"/>,
+		/// <see cref="string"/>,
+		/// </returns>
 		public static Type GetTypeFromStringValue(string value)
 		{
 			if (int.TryParse(value, out var iValue))	
@@ -38,6 +50,20 @@ namespace Routing.Helpers
 			return typeof(string);
 		}
 
+
+		/// <summary>
+		/// Может получить название типа из строкового значения
+		/// Принимаемые шаблоны значений в строке те же, что и в TryParse этого типа.
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns>Один из типов: 
+		/// <see cref="int"/>, 
+		/// <see cref="float"/>,
+		/// <see cref="double"/>,
+		/// <see cref="DateTime"/>,
+		/// <see cref="Guid"/>,
+		/// <see cref="string"/>,
+		/// </returns>
 		public static string GetTypeNameFromStringValue(string value)
 		{
 			return TypeAliases.GetValueOrDefault(GetTypeFromStringValue(value).Name);
