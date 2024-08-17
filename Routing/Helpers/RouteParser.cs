@@ -9,6 +9,11 @@ namespace Routing.Helpers
 {
     public class RouteParser
     {
+        /// <summary>
+        /// Находит определение динамических сегментов из шаблона маршрута
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static Dictionary<string, string> GetRegistratorArguments(string path)
         {
             var arguments = new Dictionary<string, string>();
@@ -48,6 +53,15 @@ namespace Routing.Helpers
 
 			return route.Remove(dynamicSymbolIndex);
 		}
+
+
+
+        public static IEnumerable<string> GetArgumentsFromRoute(string route)
+        {
+            var arguments = new List<string>();
+
+            return arguments;    
+        }
 	}
 
 
