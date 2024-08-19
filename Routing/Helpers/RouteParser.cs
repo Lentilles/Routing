@@ -18,7 +18,7 @@ namespace Routing.Helpers
         {
             var arguments = new Dictionary<string, string>();
 
-            var matches = Regex.Matches(path, "{\\w*:\\w*}");
+            var matches = Regex.Matches(path, "\\w*:\\w*");
 
             if (matches == null)
             {
@@ -46,9 +46,9 @@ namespace Routing.Helpers
 		public static string GetStaticPartFromRouteTemplate(string route)
 		{
 			var dynamicSymbolIndex = route.IndexOf('{');
-			if (dynamicSymbolIndex < 1)
+			if (dynamicSymbolIndex < 0)
 			{
-				throw new ArgumentException($"{route} has bad template");
+				return route;
 			}
 
 			return route.Remove(dynamicSymbolIndex);
