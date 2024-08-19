@@ -68,5 +68,27 @@ namespace Routing.Helpers
 		{
 			return TypeAliases.GetValueOrDefault(GetTypeFromStringValue(value).Name);
 		}
-	}
+
+
+		/// <summary>
+		/// Конвертирует строковый параметр в объект
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+        public static Task<object> ConvertFromStringToObject(string value)
+        {
+            if (int.TryParse(value, out var iValue))
+                return Task.FromResult<object>(iValue);
+            if (float.TryParse(value, out var fValue))
+                return Task.FromResult<object>(fValue);
+            if (double.TryParse(value, out var dValue))
+                return Task.FromResult<object>(dValue);
+            if (DateTime.TryParse(value, out var dtValue))
+                return Task.FromResult<object>(dtValue);
+            if (Guid.TryParse(value, out var gValue))
+                return Task.FromResult<object>(gValue);
+
+            return Task.FromResult<object>(value);
+        }
+    }
 }
