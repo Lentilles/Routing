@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace Routing.Helpers
+﻿namespace Routing.Helpers
 {
 	public class TypeParser
 	{
@@ -34,20 +25,20 @@ namespace Routing.Helpers
 		/// <see cref="Guid"/>,
 		/// <see cref="string"/>,
 		/// </returns>
-		public static Type GetTypeFromStringValue(string value)
+		public static Task<Type> GetTypeFromStringValueAsync(string value)
 		{
 			if (int.TryParse(value, out var iValue))	
-				return typeof(int);
+				return Task.FromResult(typeof(int));
 			if (float.TryParse(value, out var fValue))
-				return typeof(float);
+				return Task.FromResult(typeof(float));
 			if (double.TryParse(value, out var dValue))
-				return typeof(double);
+				return Task.FromResult(typeof(double));
 			if (DateTime.TryParse(value, out var dtValue))
-				return typeof(DateTime);
+				return Task.FromResult(typeof(DateTime));
 			if (Guid.TryParse(value, out var gValue))
-				return typeof(Guid);
+				return Task.FromResult(typeof(Guid));
 
-			return typeof(string);
+			return Task.FromResult(typeof(string));
 		}
 
 
@@ -64,9 +55,14 @@ namespace Routing.Helpers
 		/// <see cref="Guid"/>,
 		/// <see cref="string"/>,
 		/// </returns>
-		public static string GetTypeNameFromStringValue(string value)
+		public static async Task<string> GetTypeNameFromStringValueAsync(string value)
 		{
-			return TypeAliases.GetValueOrDefault(GetTypeFromStringValue(value).Name);
+			var typeName = (await GetTypeFromStringValueAsync(value)).Name;
+
+			if (typeName == null)
+				throw new ArgumentException($"{value} is not valid argument");
+
+            return TypeAliases.GetValueOrDefault(typeName) ?? throw new Exception($"{typeName} type doesnt exist in {nameof(TypeAliases)}");
 		}
 
 
@@ -75,7 +71,7 @@ namespace Routing.Helpers
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-        public static Task<object> ConvertFromStringToObject(string value)
+        public static Task<object> ConvertFromStringToObjectAsync(string value)
         {
             if (int.TryParse(value, out var iValue))
                 return Task.FromResult<object>(iValue);
