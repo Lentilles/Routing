@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace Routing.Helpers
 {
@@ -53,16 +48,6 @@ namespace Routing.Helpers
 
 			return route.Remove(dynamicSymbolIndex);
 		}
-
-
-
-        public static IEnumerable<string> GetArgumentsFromRoute(string route)
-        {
-            var arguments = new List<string>();
-
-            return arguments;    
-        }
 	}
-
 
 }
