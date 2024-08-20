@@ -11,6 +11,7 @@ internal class Program
         AddDateTimeTest(router);
         AddGuidTest(router);
         AddStringTest(router);
+        AddMixTest(router);
     }
 
     private static void AddTestStaticRoute(Router router)
@@ -61,5 +62,36 @@ internal class Program
 
         router.Route($"/foo/bar/TestString/");
         router.Route($"/foo/bar/TestString/teststring/");
+    }
+
+
+    private static void AddMixTest(Router router)
+    {
+        router.RegisterRoute("/a/b/c/d/{a:int}/{b:float}/{c:DateTime}/{d:Guid}/{g:string}/", 
+            (
+                int a, 
+                float b, 
+                DateTime c, 
+                Guid d, 
+                string g
+            ) => 
+            {
+                Console.WriteLine("MixTest"); 
+                Console.WriteLine(a); 
+                Console.WriteLine(b); 
+                Console.WriteLine(c); 
+                Console.WriteLine(d); 
+                Console.WriteLine(g); 
+            });
+
+
+        var a = 1;
+        var b = 2.5f;
+        var c = DateTime.Now;
+        var d = Guid.NewGuid();
+        var g = "Test";
+
+
+        router.Route($"/a/b/c/d/{a}/{b}/{c}/{d}/{g}/");
     }
 }
