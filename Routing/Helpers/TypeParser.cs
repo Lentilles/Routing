@@ -1,4 +1,6 @@
-﻿namespace Routing.Helpers
+﻿using System.Globalization;
+
+namespace Routing.Helpers
 {
 	public class TypeParser
 	{
@@ -27,11 +29,11 @@
 		/// </returns>
 		public static Task<Type> GetTypeFromStringValueAsync(string value)
 		{
-			if (int.TryParse(value, out var iValue))	
+			if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var iValue))	
 				return Task.FromResult(typeof(int));
-			if (float.TryParse(value, out var fValue))
+			if (float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var fValue))
 				return Task.FromResult(typeof(float));
-			if (double.TryParse(value, out var dValue))
+			if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var dValue))
 				return Task.FromResult(typeof(double));
 			if (DateTime.TryParse(value, out var dtValue))
 				return Task.FromResult(typeof(DateTime));
@@ -73,11 +75,11 @@
 		/// <returns></returns>
         public static Task<object> ConvertFromStringToObjectAsync(string value)
         {
-            if (int.TryParse(value, out var iValue))
+            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var iValue))
                 return Task.FromResult<object>(iValue);
-            if (float.TryParse(value, out var fValue))
+            if (float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var fValue))
                 return Task.FromResult<object>(fValue);
-            if (double.TryParse(value, out var dValue))
+            if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var dValue))
                 return Task.FromResult<object>(dValue);
             if (DateTime.TryParse(value, out var dtValue))
                 return Task.FromResult<object>(dtValue);
