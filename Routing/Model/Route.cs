@@ -10,9 +10,13 @@ namespace Routing.Model
 		///     ArgName - Type
 		/// </summary>
 		public readonly Dictionary<string, string> ArgumentsInRoute;
-		public readonly Dictionary<string, string> ArgumentsInDelegate;
+        /// <summary>
+        ///     ArgName - Type
+        /// </summary>
+        public readonly Dictionary<string, string> ArgumentsInDelegate;
 		public readonly string StaticPath;
 
+		public readonly bool ArgumentNameMatch = true;
 
 		public Route(string route, Delegate method)
 		{
@@ -20,6 +24,14 @@ namespace Routing.Model
 			StaticPath = RouteParser.GetStaticPartFromRouteTemplate(route);
 			ArgumentsInRoute = RouteParser.GetRegistratorArguments(route);
 			ArgumentsInDelegate = GetParameterNamesFromDelegate(method.Method.GetParameters());
+
+			foreach (var argument in ArgumentsInRoute)
+			{
+				if (!ArgumentsInDelegate.ContainsKey(argument.Key))
+				{
+					ArgumentNameMatch = false;
+				}
+			}
 		}
 
 		private Dictionary<string, string> GetParameterNamesFromDelegate(ParameterInfo[] parameters)
