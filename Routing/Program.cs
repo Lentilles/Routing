@@ -12,6 +12,8 @@ internal class Program
         AddGuidTest(router);
         AddStringTest(router);
         AddMixTest(router);
+        AddNameMatchTest(router);
+        AddMixWithNameMatchTest(router);
     }
 
     private static void AddTestStaticRoute(Router router)
@@ -64,7 +66,6 @@ internal class Program
         router.Route($"/foo/bar/TestString/teststring/");
     }
 
-
     private static void AddMixTest(Router router)
     {
         router.RegisterRoute("/a/b/c/d/{a:int}/{b:float}/{c:DateTime}/{d:Guid}/{g:string}/", 
@@ -84,6 +85,40 @@ internal class Program
                 Console.WriteLine(g); 
             });
 
+        var a = 1;
+        var b = 2.5f;
+        var c = DateTime.Now;
+        var d = Guid.NewGuid();
+        var g = "Test";
+
+        router.Route($"/a/b/c/d/{a}/{b}/{c}/{d}/{g}/");
+    }
+
+    private static void AddNameMatchTest(Router router)
+    {
+        router.RegisterRoute("/foo/bar/nameMatch/{a:int}/{b:int}/", (int b, int a) => { Console.WriteLine($"{a} | {b}"); });
+
+        router.Route("/foo/bar/nameMatch/5/6/");
+    }
+
+    private static void AddMixWithNameMatchTest(Router router)
+    {
+        router.RegisterRoute("/a/b/c/d/nameMatch/{a:int}/{b:float}/{c:DateTime}/{d:Guid}/{g:string}/",
+            (
+                string g,
+                float b,
+                DateTime c,
+                Guid d,
+                int a
+            ) =>
+            {
+                Console.WriteLine("MixTest");
+                Console.WriteLine(a);
+                Console.WriteLine(b);
+                Console.WriteLine(c);
+                Console.WriteLine(d);
+                Console.WriteLine(g);
+            });
 
         var a = 1;
         var b = 2.5f;
@@ -91,7 +126,6 @@ internal class Program
         var d = Guid.NewGuid();
         var g = "Test";
 
-
-        router.Route($"/a/b/c/d/{a}/{b}/{c}/{d}/{g}/");
+        router.Route($"/a/b/c/d/nameMatch/{a}/{b}/{c}/{d}/{g}/");
     }
 }
