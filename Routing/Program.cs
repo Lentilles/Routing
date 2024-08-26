@@ -6,8 +6,10 @@ internal class Program
     {        
         
         Router router = new Router();
+
         AddIntTest(router);
         AddFloatTest(router);
+        AddDoubleTest(router);
         AddDateTimeTest(router);
         AddGuidTest(router);
         AddStringTest(router);
@@ -24,6 +26,8 @@ internal class Program
     }
     private static void AddIntTest(Router router)
     {
+        Console.WriteLine("Int Test");
+
         router.RegisterRoute("/foo/bar/{a:int}/", (int a) => { Console.WriteLine(a); });
         router.RegisterRoute("/foo/bar/{a:int}/{b:int}/", (int a, int b) => { Console.WriteLine($"{a} | {b}"); });
 
@@ -32,6 +36,8 @@ internal class Program
     }
     private static void AddFloatTest(Router router)
     {
+        Console.WriteLine("\n\nFloat Test");
+     
         router.RegisterRoute("/foo/bar/{a:float}/", (float a) => { Console.WriteLine(a); });
         router.RegisterRoute("/foo/bar/{a:float}/{b:float}/", (float a, float b) => { Console.WriteLine($"{a} | {b}"); });
 
@@ -39,8 +45,21 @@ internal class Program
         router.Route($"/foo/bar/{(5.5f).ToString()}/{(6.5f).ToString()}/");
     }
 
+    private static void AddDoubleTest(Router router)
+    {
+        Console.WriteLine("\n\nDouble Test");
+
+        router.RegisterRoute("/foo/bar/{a:double}/", (double a) => { Console.WriteLine(a); });
+        router.RegisterRoute("/foo/bar/{a:double}/{b:double}/", (double a, double b) => { Console.WriteLine($"{a} | {b}"); });
+
+        router.Route($"/foo/bar/{(0.22235235235235235235235).ToString()}/");
+        router.Route($"/foo/bar/{(0.2235235235235235235235).ToString()}/{(0.2235235235235235235235).ToString()}/");
+    }
+
     private static void AddDateTimeTest(Router router)
     {
+        Console.WriteLine("\n\nDateTime Test");
+        
         router.RegisterRoute("/foo/bar/{a:DateTime}/", (DateTime a) => { Console.WriteLine(a); });
         router.RegisterRoute("/foo/bar/{a:DateTime}/{b:DateTime}/", (DateTime a, DateTime b) => { Console.WriteLine($"{a} | {b}"); });
 
@@ -50,6 +69,9 @@ internal class Program
 
     private static void AddGuidTest(Router router)
     {
+        Console.WriteLine("\n\nGuid Test");
+
+
         router.RegisterRoute("/foo/bar/{a:Guid}/", (Guid a) => { Console.WriteLine(a); });
         router.RegisterRoute("/foo/bar/{a:Guid}/{b:Guid}/", (Guid a, Guid b) => { Console.WriteLine($"{a} | {b}"); });
 
@@ -59,6 +81,8 @@ internal class Program
 
     private static void AddStringTest(Router router)
     {
+        Console.WriteLine("\n\nstring Test");
+
         router.RegisterRoute("/foo/bar/{a:string}/", (string a) => { Console.WriteLine(a); });
         router.RegisterRoute("/foo/bar/{a:string}/{b:string}/", (string a, string b) => { Console.WriteLine($"{a} | {b}"); });
 
@@ -68,6 +92,8 @@ internal class Program
 
     private static void AddMixTest(Router router)
     {
+        Console.WriteLine("\n\nmix Test");
+
         router.RegisterRoute("/a/b/c/d/{a:int}/{b:float}/{c:DateTime}/{d:Guid}/{g:string}/", 
             (
                 int a, 
@@ -77,7 +103,6 @@ internal class Program
                 string g
             ) => 
             {
-                Console.WriteLine("MixTest"); 
                 Console.WriteLine(a); 
                 Console.WriteLine(b); 
                 Console.WriteLine(c); 
@@ -96,6 +121,8 @@ internal class Program
 
     private static void AddNameMatchTest(Router router)
     {
+        Console.WriteLine("\n\nName match Test");
+
         router.RegisterRoute("/foo/bar/nameMatch/{a:int}/{b:int}/", (int b, int a) => { Console.WriteLine($"{a} | {b}"); });
 
         router.Route("/foo/bar/nameMatch/5/6/");
@@ -103,6 +130,8 @@ internal class Program
 
     private static void AddMixWithNameMatchTest(Router router)
     {
+        Console.WriteLine("\n\nMix with name match Test");
+        
         router.RegisterRoute("/a/b/c/d/nameMatch/{a:int}/{b:float}/{c:DateTime}/{d:Guid}/{g:string}/",
             (
                 string g,
@@ -112,7 +141,6 @@ internal class Program
                 int a
             ) =>
             {
-                Console.WriteLine("MixTest");
                 Console.WriteLine(a);
                 Console.WriteLine(b);
                 Console.WriteLine(c);
