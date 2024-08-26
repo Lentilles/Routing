@@ -30,7 +30,6 @@ namespace Routing
             routingTable.Add(template, routeData);
         }
 
-        //TODO зарефакторить
         /// <summary>
         /// Вызывает делегат по зарегистрированному маршруту
         /// </summary>
@@ -52,7 +51,6 @@ namespace Routing
                 }
 
                 var argumentsInRoute = route.Replace(staticRoutePart, "");
-
                 var arguments = argumentsInRoute.Split("/", StringSplitOptions.RemoveEmptyEntries);
 
                 List<string> argumentNames = new();
@@ -62,18 +60,16 @@ namespace Routing
                     argumentNames.Add(await TypeParser.GetTypeNameFromStringValueAsync(argument));
                 }
 
-                var result = await GetRouteByArgumentTypeMatch(routesWithSameStaticRoute, argumentNames);
+                var targetRoute = await GetRouteByArgumentTypeMatch(routesWithSameStaticRoute, argumentNames);
 
-                List<object?> args = new();
-
-                foreach (var argument in arguments)
+                if (targetRoute == null)
                 {
-                    args.Add(await TypeParser.ConvertFromStringToObjectAsync(argument));
+                    throw new NullReferenceException($"{nameof(targetRoute)} is null");
                 }
 
+                object?[] args = await CreateArgumentsArray(arguments, targetRoute);
 
-                if (result != null)
-                    result.Method.DynamicInvoke(args.ToArray());
+                targetRoute.Method.DynamicInvoke(args);
 
                 return;
             }
@@ -88,6 +84,44 @@ namespace Routing
                     return;
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Заполняет последовательность аргументов передающихся в делегат в последовательности зависящей от 
+        /// наименования аргументов в методах в случае совпадения имен этих аргументов
+        /// </summary>
+        /// <param name="arguments"></param>
+        /// <param name="targetRoute"></param>
+        /// <returns></returns>
+        private static async Task<object?[]> CreateArgumentsArray(string[] arguments, Route? targetRoute)
+        {
+            if(targetRoute == null)
+                throw new ArgumentNullException(nameof(targetRoute));
+
+            var countOfArgument = targetRoute.ArgumentsInDelegate.Count;
+
+            object?[] args = new object?[countOfArgument];
+            if (targetRoute.ArgumentNameMatch)
+            {
+                for (int i = 0; i < countOfArgument; i++)
+                {
+                    var argumentNameInRoute = targetRoute.ArgumentsInRoute.ElementAt(i);
+
+                    var indexForArgument = targetRoute.ArgumentsInDelegate.Keys.ToList().IndexOf(argumentNameInRoute.Key);
+
+                    args[indexForArgument] = await TypeParser.ConvertFromStringToObjectAsync(arguments[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < countOfArgument; i++)
+                {
+                    args[i] = await TypeParser.ConvertFromStringToObjectAsync(arguments[i]);
+                }
+            }
+
+            return args;
         }
 
         /// <summary>
